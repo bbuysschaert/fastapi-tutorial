@@ -1,7 +1,7 @@
-from typing import Union
+from typing import Union, List
 
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, Query
+from pydantic import BaseModel, Required
 
 
 class Item(BaseModel):
@@ -12,6 +12,41 @@ class Item(BaseModel):
 
 
 app = FastAPI()
+
+@app.get("/items2/")
+async def read_items2(q: Union[str, None] = Query(
+        default=None,
+        title="Query string",
+        description="Query string for the items to search in the database that have a good match",
+        alias='item-query',
+        min_length=3,
+    )
+    ):
+    query_items = {"q": q}
+    return query_items
+
+@app.get("/items/")
+async def read_items(
+    q: Union[str, None] = Query(
+        default=None,
+        alias="item-query",
+        title="Query string",
+        description="Query string for the items to search in the database that have a good match",
+        min_length=3,
+        max_length=50,
+        regex="^fixedquery$",
+        deprecated=True,
+        include_in_schema=False # Will not show in the OpenAPI schema, but the method and endpoint will still be visible!
+        )
+    ):
+    """ 
+    Use the Query object to give the query parameters more options!  Regular expressions or eq, lt, ... on numerical values are also possible!
+    Use the ellipsis value to indicate that the query parameter is required (but if used in conjunction with "Union[str, None]" than it can be empty)
+    """
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
 
 
 # Use a POST statement to send data

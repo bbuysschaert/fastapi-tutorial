@@ -9,6 +9,8 @@ FastAPI creates automatic OpenAPI and Swagger documentation.  The tutorial indic
 
 Note: this is assuming that your application is running on the local server [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 
+The JSON Schemas of your [body] models will be part of your OpenAPI generated schema, and will be shown in the interactive API docs.  [Reference](https://fastapi.tiangolo.com/tutorial/body/#automatic-docs)
+
 ## Running of your FastAPI application
 `>>> uvicorn main:app --reload`
 where `main.py` is the main application that you want to run.
@@ -42,3 +44,18 @@ async def read_users():
 async def read_users2():
     return ["Bean", "Elfo"]
 ```    
+
+### Sending data
+Use a `POST` statement instead of a `GET` statement to send data in the body of a HTTP request!!
+
+Use [Pydantic](https://pydantic-docs.helpmanual.io/) models to declare the request body.
+
+
+## Different interpretations of the function parameters
+The function parameters will be recognized as follows:
+
+- If the parameter is also declared in the __path__, it will be used as a path parameter.
+- If the parameter is of a __singular type__ (like `int`, `float`, `str`, `bool`, etc) it will be interpreted as a __query__ parameter.
+- If the parameter is declared to be of the type of a __Pydantic model__, it will be interpreted as a request __body__.
+
+[Reference](https://fastapi.tiangolo.com/tutorial/body/#request-body-path-query-parameters)

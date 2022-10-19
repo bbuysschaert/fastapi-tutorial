@@ -61,3 +61,21 @@ The function parameters will be recognized as follows:
 - If the parameter is declared to be of the type of a __Pydantic model__, it will be interpreted as a request __body__.
 
 [Reference](https://fastapi.tiangolo.com/tutorial/body/#request-body-path-query-parameters)
+
+## Order of arguments vs using kwargs
+Standard Python behaviour enforces you that parameters without a default should be defined in a function before those with a default value.  It interprets the former as arguments, while the latter are kwargs.  This might cause some issues when declaring a mixed type of variables.  Especially when the order of your parameters matters...
+
+FastAPI indicates that you should use a little "trick" to circumvent this problem.  Namely, define the functions as
+```
+from fastapi import FastAPI, Path, Query
+
+app = FastAPI()
+
+@app.get('/items/{item_id})
+async def my_func(*,
+                    item_id: int = Path(),
+                    q: str = Query()
+                )
+```
+
+This is not suprising, as all these parameters are in essence keyword arguments...

@@ -1,6 +1,6 @@
 from typing import Union, List
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Path
 from pydantic import BaseModel, Required
 
 
@@ -36,7 +36,7 @@ async def read_items(
         max_length=50,
         regex="^fixedquery$",
         deprecated=True,
-        include_in_schema=False # Will not show in the OpenAPI schema, but the method and endpoint will still be visible!
+        include_in_schema=True # Will not show in the OpenAPI schema, but the method and endpoint will still be visible!
         )
     ):
     """ 
@@ -44,6 +44,16 @@ async def read_items(
     Use the ellipsis value to indicate that the query parameter is required (but if used in conjunction with "Union[str, None]" than it can be empty)
     """
     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
+
+@app.get("/items/{item_id}")
+async def read_items(
+    item_id: int = Path(title="The ID of the item to get", gt=0, le=1000),
+    q: Union[str, None] = Query(default=None, alias="item-query"),
+):
+    results = {"item_id": item_id}
     if q:
         results.update({"q": q})
     return results

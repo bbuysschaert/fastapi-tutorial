@@ -1,6 +1,6 @@
 from typing import Union, List
 
-from fastapi import FastAPI, Query, Path
+from fastapi import FastAPI, Query, Path, Body
 from pydantic import BaseModel, Required
 
 
@@ -10,8 +10,17 @@ class Item(BaseModel):
     price: float
     tax: Union[float, None] = None # Is optional, note that the syntax differs for Python 3.10 and higher
 
+class User(BaseModel):
+    username: str
+    full_name: Union[str, None] = None
+
 
 app = FastAPI()
+
+@app.put("/items/{item_id}")
+async def update_item(item_id: int, item: Item = Body(embed=True)):
+    results = {"item_id": item_id, "item": item}
+    return results
 
 @app.get("/items2/")
 async def read_items2(q: Union[str, None] = Query(
@@ -73,9 +82,11 @@ async def create_item(item: Item):
     return item_dict
 
 # Combining body and path parameters and query parameters
+"""
 @app.put("/items/{item_id}")
 async def create_item(item_id: int, item: Item, q: Union[str, None] = None):
     result = {"item_id": item_id, **item.dict()}
     if q:
         result.update({"q": q})
     return result
+"""

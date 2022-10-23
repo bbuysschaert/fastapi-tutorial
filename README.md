@@ -103,7 +103,7 @@ class Item(BaseModel):
     price: float
     tax: Union[float, None] = None
 
-    __class Config:
+    class Config:
         schema_extra = {
             "example": {
                 "name": "Foo",
@@ -112,7 +112,6 @@ class Item(BaseModel):
                 "tax": 3.2,
             }
         }
-    __
 ```
 
 Option 2:
@@ -126,7 +125,7 @@ app = FastAPI()
 
 
 class Item(BaseModel):
-    name: str = __Field(example="Foo")__
+    name: str = Field(example="Foo")
     description: Union[str, None] = Field(default=None, example="A very nice Item")
     price: float = Field(example=35.4)
     tax: Union[float, None] = Field(default=None, example=3.2)

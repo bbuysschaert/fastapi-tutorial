@@ -1,6 +1,6 @@
 from typing import Union, List, Dict
 
-from fastapi import FastAPI, Query, Path, Body, Cookie
+from fastapi import FastAPI, Query, Path, Body, Cookie, Header
 from pydantic import BaseModel, Required, Field, HttpUrl
 
 
@@ -65,12 +65,14 @@ async def read_items2(
             alias='item-query',
             min_length=3,
             ),
-    ads_id: Union[str, None] = Cookie(default=None)):
+    ads_id: Union[str, None] = Cookie(default=None),
+    user_agent = Union[str, None] = Header(default=None)):
     """
     Some documentation
     """
     query_items = {"q": q}
     query_items.update({'ads_id':ads_id})
+    query_items.update({'User-Agent':user_agent})
     return query_items
 
 @app.get("/items/")

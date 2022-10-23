@@ -10,6 +10,18 @@ class Item(BaseModel):
     price: float
     tax: Union[float, None] = None # Is optional, note that the syntax differs for Python 3.10 and higher
 
+    # Declare request example data
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Foo",
+                "description": "A very nice Item",
+                "price": 35.4,
+                "tax": 3.2,
+            }
+        }
+
+
 class User(BaseModel):
     username: str
     full_name: Union[str, None] = None

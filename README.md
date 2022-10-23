@@ -81,11 +81,12 @@ async def my_func(*,
 This is not suprising, as all these parameters are in essence keyword arguments...
 
 ## Declare request example data
-This request example data will update the API documentations in your application.  It is different from the default values that are declared in the function / methods...
+This request example data will update the API documentations in your application.  It is different from the default values that are declared in the function / methods...  The following data types can have 
 
 There are multiple options to declare this example data, but the main two options are:
 1. In the Pydantic model as a `schema_extra;
-2. As an `example` argument in the `pydantic.Field` method.
+2. As an `example` argument in the `pydantic.Field` method;
+3. As an `example` argument in `fastapi.Body`, `fastapi.Path`, `fastapi.Query`, `fastapi.Header`, `fastapi.Cookie`, etc., in the function / method directly.  This method also allows multiple examples under the `examples` argument.  Which seems similar to doctesting, but without any errors thrown...
 
 Option 1:
 ```

@@ -1,6 +1,6 @@
 from typing import Union, List, Dict
 
-from fastapi import FastAPI, Query, Path, Body
+from fastapi import FastAPI, Query, Path, Body, Cookie
 from pydantic import BaseModel, Required, Field, HttpUrl
 
 
@@ -57,15 +57,20 @@ async def update_item(item_id: int, item: Item = Body(embed=True)):
     return results
 
 @app.get("/items2/")
-async def read_items2(q: Union[str, None] = Query(
-        default=None,
-        title="Query string",
-        description="Query string for the items to search in the database that have a good match",
-        alias='item-query',
-        min_length=3,
-    )
-    ):
+async def read_items2(
+    q: Union[str, None] = Query(
+            default=None,
+            title="Query string",
+            description="Query string for the items to search in the database that have a good match",
+            alias='item-query',
+            min_length=3,
+            ),
+    ads_id: Union[str, None] = Cookie(default=None)):
+    """
+    Some documentation
+    """
     query_items = {"q": q}
+    query_items.update({'ads_id':ads_id})
     return query_items
 
 @app.get("/items/")

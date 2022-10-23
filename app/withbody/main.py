@@ -1,7 +1,7 @@
-from typing import Union, List
+from typing import Union, List, Dict
 
 from fastapi import FastAPI, Query, Path, Body
-from pydantic import BaseModel, Required
+from pydantic import BaseModel, Required, Field, HttpUrl
 
 
 class Item(BaseModel):
@@ -14,8 +14,30 @@ class User(BaseModel):
     username: str
     full_name: Union[str, None] = None
 
+class Image(BaseModel):
+    url: HttpUrl
+    name: str
+
 
 app = FastAPI()
+
+@app.post("/images/multiple/")
+async def create_multiple_images(images: List[Image]):
+    """
+    Use a nested data type; a list of Image models
+    """
+    return images
+
+@app.post("/index-weights/")
+async def create_index_weights(weights: Dict[int, float]):
+    """
+    Accept any dict as long as it has int keys with float values
+    
+    Have in mind that JSON only supports str as keys.
+    But Pydantic has automatic data conversion.
+    This means that, even though your API clients can only send strings as keys, as long as those strings contain pure integers, Pydantic will convert them and validate them.
+    """
+    return weights
 
 @app.put("/items/{item_id}")
 async def update_item(item_id: int, item: Item = Body(embed=True)):
@@ -45,7 +67,7 @@ async def read_items(
         max_length=50,
         regex="^fixedquery$",
         deprecated=True,
-        include_in_schema=True # Will not show in the OpenAPI schema, but the method and endpoint will still be visible!
+        include_in_schema=True # Will not show this parameter in the OpenAPI schema if False, but the method and endpoint will still be visible!
         )
     ):
     """ 

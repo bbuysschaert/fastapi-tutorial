@@ -8,3 +8,5 @@ dependencies:
     - uvicorn[standard]
     - sqlalchemy
     - requests
+    - structlog
+    - fastapi-sqla

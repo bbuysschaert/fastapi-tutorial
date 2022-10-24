@@ -30,6 +30,15 @@ items = {
     "baz": {"name": "Baz", "description": None, "price": 50.2, "tax": 10.5, "tags": []},
 }
 
+class Song(BaseModel):
+    name: str
+    description: str
+
+songs = [
+    {"name": "Red", "description": "It's my aeroplane"},
+    {"name": "Foo", "description": "There comes my hero"},    
+]
+
 
 @app.get(
     "/items/{item_id}/name",
@@ -49,13 +58,10 @@ async def read_item_public_data(item_id: str):
 async def read_item(item_id: str):
     return items[item_id]
 
-items = {
-    "foo": {"name": "Foo", "price": 50.2},
-    "bar": {"name": "Bar", "description": "The Bar fighters", "price": 62, "tax": 20.2},
-    "baz": {
-        "name": "Baz",
-        "description": "There goes my baz",
-        "price": 50.2,
-        "tax": 10.5,
-    },
-}    
+
+
+
+@app.get("/songs/", response_model=List[Song])
+async def read_songs():
+    from operator import itemgetter
+    return sorted(songs, key=itemgetter('name'))

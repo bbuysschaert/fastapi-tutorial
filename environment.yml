@@ -3,10 +3,14 @@ channels:
     - conda-forge
     - defaults
 dependencies:
-    - python=3.9
+    - python=3.10
     - fastapi
     - uvicorn[standard]
     - sqlalchemy
     - requests
     - structlog
-    - fastapi-sqla
+    - poetry
+    - alembic
+    - pip
+    - pip:
+        - fastapi-sqla

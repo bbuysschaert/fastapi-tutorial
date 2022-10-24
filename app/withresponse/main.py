@@ -10,7 +10,7 @@ This also applies to response_model_by_alias that works similarly.
 
 from typing import List, Union
 
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -61,7 +61,7 @@ async def read_item(item_id: str):
 
 
 
-@app.get("/songs/", response_model=List[Song])
+@app.get("/songs/", response_model=List[Song], status_code=status.HTTP_200_OK)
 async def read_songs():
     from operator import itemgetter
     return sorted(songs, key=itemgetter('name'))

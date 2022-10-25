@@ -12,3 +12,6 @@ class UserIn(BaseModel):
 class UserOut(UserIn):
     id : int
 
+    class Config:
+        orm_model = True
+
